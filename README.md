@@ -1,2 +1,2 @@
 # Security-Lab-Tasks
-Solution to some assigned tasks of Cryptographics algorithms. 
+Solutions to some assigned tasks of Cryptographics algorithms. 
