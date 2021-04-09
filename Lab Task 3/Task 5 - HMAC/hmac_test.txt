@@ -1,0 +1,1 @@
+This file is created to test keyed-hash message authentication code or HMAC

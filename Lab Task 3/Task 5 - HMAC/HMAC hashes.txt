@@ -1,0 +1,19 @@
+HMAC-MD5:
+for key nirzak: HMAC-MD5(hmac_test.txt)= a592351302ae8109b00701c6bfea2b7e
+
+for key "sfekjdfbiwrabfkareubfwEILBFAERK,SBJSLWBCSDH":
+HMAC-MD5(hmac_test.txt)= 65b443a78cde53b86f2c799aebbea094
+
+HMAC-SHA1:
+for key nirzak HMAC-SHA1(hmac_test.txt)= 908d6314a1b3e3be53a089bb4e020a39fe48da0c
+
+for key "sjbdlEWK,BFlewibfkwesjd,bfjwskbldvfvkhcjdvsjdvcjhevdksvd":
+HMAC-SHA1(hmac_test.txt)= af2fc26042f0444f337d9abc1ee9ddf5b1bd1eaf
+
+HMAC-SHA256:
+for key nirzak:
+HMAC-SHA256(hmac_test.txt)= cc23aa24e37c49b64c69e1b37a7d090a76f1380c8afed30d553e97f9a40f49df
+
+for key "slkjdbbjssjsdbjewfjewfsdkjfhvbkwebfdslVbjkdslbfdskjJbvdskjbvkdsvbdsjkvbdkjbvsdvbcsjdbjsdkbv,sdjvvdsvkjsdcbjdvcjdsbdkusdfuieggfuvdsfvdkdsvksdhvkdvjhdvbhdvbjhdsvhjdvsshvdjhvsdhjsdhjes"
+HMAC-SHA256(hmac_test.txt)= f139abe8c7f801c8912cb005e02afd75c293482a7d106954f29e5c141fd41597
+

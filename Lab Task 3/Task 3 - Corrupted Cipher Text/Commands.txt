@@ -1,0 +1,19 @@
+AES-ECB:
+Encrypting: openssl enc -aes-128-ecb -e -in test.txt -out cipher-ecb.bin -K 72d834c4236de60ddf8a4cf7cca809ee
+Decrypting the corrupted file:
+openssl enc -aes-128-ecb -d -in corrupted-cipher-ecb.bin -out decrypted-text-ecb.txt -K 72d834c4236de60ddf8a4cf7cca809ee
+
+AES-CBC:
+Encrypting: openssl enc -aes-128-cbc -e -in test.txt -out cipher-cbc.bin -K 72d834c4236de60ddf8a4cf7cca809ee -iv 852448eb6bd46e6798185ea83d73a948
+Decrypting the corrupted file:
+openssl enc -aes-128-cbc -d -in corrupted-cipher-cbc.bin -out decrypted-text.txt -K 72d834c4236de60ddf8a4cf7cca809ee -iv 852448eb6bd46e6798185ea83d73a948
+
+AES-CFB:
+Encrypting: openssl enc -aes-128-cfb -e -in test.txt -out cipher-cfb.bin -K 72d834c4236de60ddf8a4cf7cca809ee -iv 852448eb6bd46e6798185ea83d73a948
+Decrypting the corrupted file:
+openssl enc -aes-128-cfb -d -in corrupted-cipher-cfb.bin -out decrypted-text-cfb.txt -K 72d834c4236de60ddf8a4cf7cca809ee -iv 852448eb6bd46e6798185ea83d73a948
+
+AES-CFB:
+Encrypting: openssl enc -aes-128-ofb -e -in test.txt -out cipher-ofb.bin -K 72d834c4236de60ddf8a4cf7cca809ee -iv 852448eb6bd46e6798185ea83d73a948
+Decrypting the corrupted file:
+openssl enc -aes-128-ofb -d -in corrupted-cipher-ofb.bin -out decrypted-text-ofb.txt -K 72d834c4236de60ddf8a4cf7cca809ee -iv 852448eb6bd46e6798185ea83d73a948

@@ -1,0 +1,4 @@
+md5: openssl dgst -md5 testing_hash.txt
+sha1: openssl dgst -sha1 testing_hash.txt
+sha256: openssl dgst -sha256 testing_hash.txt
+sha512: openssl dgst -sha512 testing_hash.txt

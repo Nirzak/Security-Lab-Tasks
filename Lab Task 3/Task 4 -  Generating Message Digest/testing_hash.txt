@@ -1,0 +1,1 @@
+This file is created to test various hashing algorithms like md-5, sha256 sha1 etc
