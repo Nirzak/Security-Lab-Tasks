@@ -1,0 +1,5 @@
+Encrypting using AES ECB mode:
+openssl enc -aes-128-ecb -e -in pic_original.bmp -out pic_ecb.bmp -K 72d834c4236de60ddf8a4cf7cca809ee
+
+Encrypting using AES CBC mode:
+openssl enc -aes-128-cbc -e -in pic_original.bmp -out pic_cbc.bmp -K 72d834c4236de60ddf8a4cf7cca809ee -iv 852448eb6bd46e6798185ea83d73a948

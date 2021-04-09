@@ -1,0 +1,11 @@
+AES-CBC mode:
+Encrypting: openssl enc -aes-128-cbc -e -in test.txt -out cipher-cbc.bin -K 72d834c4236de60ddf8a4cf7cca809ee -iv 852448eb6bd46e6798185ea83d73a948
+Decrypting: openssl enc -aes-128-cbc -d -in cipher-cbc.bin -out decrypted-cbc.txt -K 72d834c4236de60ddf8a4cf7cca809ee -iv 852448eb6bd46e6798185ea83d73a948
+
+AES-ECB mode:
+Encrypting: openssl enc -aes-128-ecb -e -in test.txt -out cipher-ecb.bin -K 72d834c4236de60ddf8a4cf7cca809ee
+Decrypting: openssl enc -aes-128-ecb -d -in cipher-ecb.bin -out decrypted-ecb.txt -K 72d834c4236de60ddf8a4cf7cca809ee
+
+AES-CFB mode:
+Encrypting: openssl enc -aes-128-cfb -e -in test.txt -out cipher-cfb.bin -K 72d834c4236de60ddf8a4cf7cca809ee -iv 852448eb6bd46e6798185ea83d73a948
+Decrypting: openssl enc -aes-128-cfb -d -in cipher-cfb.bin -out decrypted-cfb.txt -K 72d834c4236de60ddf8a4cf7cca809ee -iv 852448eb6bd46e6798185ea83d73a948
