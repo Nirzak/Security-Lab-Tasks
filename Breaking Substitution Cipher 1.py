@@ -38,6 +38,6 @@ if __name__ == '__main__':
     attempt = attempt.replace("X", "\033[31mV\033[0m") # LIXE to LIVE Inconkenient to Inconvenient
 
 
-    #for letter in letterFreq:
-    #    print(letter, ":", letterFreq[letter])
+    for letter in letterFreq:
+        print(letter, ":", letterFreq[letter])
     print(attempt)
