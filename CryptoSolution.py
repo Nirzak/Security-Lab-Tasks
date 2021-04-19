@@ -3,34 +3,79 @@ Created on Mon Apr 19 20:36:57 2021
 
 @author: NirZak
 """
-from Crypto.Cipher import AES
-from Crypto.Random import get_random_bytes
-from Crypto.Util.Padding import pad, unpad
+from Crypto.Cipher import AES # Importing AES library
+from Crypto.Random import get_random_bytes # Generating random keys for AES
+from Crypto.Util.Padding import pad, unpad # For encryption/decryption using AES
+from Crypto.PublicKey import RSA #Importing RSA library
+import Crypto.Signature.PKCS1_v1_5 as sign_PKCS1_v1_5 # For signature/Verify Signature
+from Crypto.Cipher import PKCS1_v1_5 # For encryption/decryption using RSA
+from Crypto import Random
+
+def rsacrypto(input_file, output_file, key_size):
+    key_pair = RSA.generate(key_size) # Generating Key Pairs
+    s_key = key_pair.export_key()  # Private key
+    g_key = key_pair.publickey().export_key()  # Public key
+
+    #Writing keys into a file
+    with open("c.pem", "wb") as x:
+         x.write(s_key)
+    with open("d.pem", "wb") as x:
+         x.write(g_key)
+
+    # Input the original file
+    file_in = open(input_file, "rb")  # opening for reading as binary
+    data = file_in.read()
+    text = data.decode("latin-1")
+    print("Original Text from the File: ", text)
+    file_in.close()
+
+    # Encryption Process
+    print("Encryption Started...")
+    encryptor = PKCS1_v1_5.new(RSA.importKey(g_key))
+    ciphertext = encryptor.encrypt(text.encode())
+    file_out = open(output_file, "wb")  # Open file to write bytes
+    file_out.write(ciphertext)  # Writing encrypted data to the file
+    file_out.close()
+
+    # Input the ciphertext from cipher file
+    print("Decryption Started...")
+    file_in = open(output_file, 'rb')  # Open the file to read bytes
+    ciphered_data = file_in.read()  # Read the rest of the data
+    file_in.close()
+    #ciphered_data = ciphered_data.decode("latin-1")
+    decryptor = PKCS1_v1_5.new(RSA.importKey(s_key))
+    byte_object = decryptor.decrypt(ciphered_data, Random.new().read)
+    plaintext = byte_object.decode()
+    #plaintext = decryptor.decrypt(ciphered_data.decode())
+    print("Text After Decryption: ", plaintext)
+
+
+
 
 def aescrypto(input_file, mode, output_file, key_size):
-    #Encryption process starts here
+    # Encryption process starts here
     if(key_size== "256"):
         key = get_random_bytes(32) #Generating the key
     else:
         key = get_random_bytes(16)
     key_location = "my_key.bin" #location to store the key
 
-    #save key to the file
+    # Save key to the file
     file_out_key = open(key_location, "wb")
     file_out_key.write(key)
     file_out_key.close()
 
-    #input the original file
+    # Input the original file
     file_in = open(input_file, "rb")  # opening for reading as binary
     data = file_in.read()
-    text = data.decode("utf-8")
+    text = data.decode("utf-8") # Decoding the byte object to print the text
     print("Original Text from the File: ", text)
     file_in.close()
 
 
     # Create cipher object and encrypt the data
     if(mode == "CFB"):
-        print("Encrypting Started...")
+        print("Encryption Started...")
         cipher = AES.new(key, AES.MODE_CFB)  # Create a AES cipher object with the key using the mode CBC
         ciphered_data = cipher.encrypt(pad(data, AES.block_size))  # Pad the input data and then encrypt
 
@@ -47,7 +92,7 @@ def aescrypto(input_file, mode, output_file, key_size):
 
         # Decrypting procress starts here
         # Read the data from the cipher file
-        print("Decrypting Started...")
+        print("Decryption Started...")
         file_in = open(output_file, 'rb')  # Open the file to read bytes
         iv = file_in.read(16)  # Read the iv out - this is 16 bytes long
         ciphered_data = file_in.read()  # Read the rest of the data
@@ -97,6 +142,11 @@ def main():
 #        else:
 #            mode = "AES.MODE_CBC"
         aescrypto(input_file, mode, output_file, key_size)
+    elif(choice == "2"):
+        input_file = input("Type the path of the input file: ")
+        output_file = input("Type the name of the output file (Eg. cipher.bin): ")
+        key_size =  int(input("Type RSA Key Size in interger (eg. 2048): "))
+        rsacrypto(input_file, output_file, key_size)
 
 
 if __name__ == "__main__":
