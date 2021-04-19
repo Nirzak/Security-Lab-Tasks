@@ -68,13 +68,13 @@ def rsasign(input_file, output_file, key_size):
     print("Loading Original File")
     file_in = open(input_file, "rb")  # opening for reading as binary
     data = file_in.read()
-    text = data.decode("latin-1")
+    #text = data.decode("latin-1")
     file_in.close()
 
     # Private key signature generation
     signer = sign_PKCS1_v1_5.new(RSA.importKey(s_key))
     rand_hash = SHA256.new()
-    rand_hash.update(text.encode())
+    rand_hash.update(data)
     signature = signer.sign(rand_hash)
     file_out = open(output_file, "wb")  # Open file to write bytes
     file_out.write(signature)  # Writing encrypted data to the file
@@ -90,13 +90,22 @@ def rsasign(input_file, output_file, key_size):
     file_in.close()
     verifier = sign_PKCS1_v1_5.new(RSA.importKey(g_key))
     _rand_hash = SHA256.new()
-    _rand_hash.update(text.encode())
+    _rand_hash.update(data)
     verify = verifier.verify(_rand_hash, sign)
     if(verify == True):
         print("Signature Verified!")
     else:
         print("Signature doesn't match!")
 
+def sha256gen(input_file):
+    # Input the original file
+    print("Loading File")
+    file_in = open(input_file, "rb")  # opening for reading as binary
+    data = file_in.read()
+    file_in.close()
+    hash_obj = SHA256.new()
+    hash_obj.update(data)
+    print("Generated SHA256 hash: ", hash_obj.hexdigest())
 
 def aescrypto(input_file, mode, output_file, key_size):
     print("Generating Key...")
@@ -204,6 +213,12 @@ def main():
         output_file = input("Type the name of the output file where signature will be stored: ")
         key_size =  int(input("Type RSA Key Size in interger (eg. 2048): "))
         rsasign(input_file, output_file, key_size)
+    elif(choice == "4"):
+        input_file = input("Type the path of the input file: ")
+        sha256gen(input_file)
+    else:
+        print("please input correct choice!")
+        main()
 
 
 if __name__ == "__main__":
