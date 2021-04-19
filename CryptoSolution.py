@@ -10,8 +10,10 @@ from Crypto.PublicKey import RSA #Importing RSA library
 import Crypto.Signature.PKCS1_v1_5 as sign_PKCS1_v1_5 # For signature/Verify Signature
 from Crypto.Cipher import PKCS1_v1_5 # For encryption/decryption using RSA
 from Crypto import Random
+from Crypto.Hash import SHA256
 
 def rsacrypto(input_file, output_file, key_size):
+    print("Generating Key Pair...")
     key_pair = RSA.generate(key_size) # Generating Key Pairs
     s_key = key_pair.export_key()  # Private key
     g_key = key_pair.publickey().export_key()  # Public key
@@ -36,9 +38,11 @@ def rsacrypto(input_file, output_file, key_size):
     file_out = open(output_file, "wb")  # Open file to write bytes
     file_out.write(ciphertext)  # Writing encrypted data to the file
     file_out.close()
+    print("Encrypted file saved as ", output_file)
 
     # Input the ciphertext from cipher file
     print("Decryption Started...")
+    print("Loading Encrypted file")
     file_in = open(output_file, 'rb')  # Open the file to read bytes
     ciphered_data = file_in.read()  # Read the rest of the data
     file_in.close()
@@ -49,11 +53,53 @@ def rsacrypto(input_file, output_file, key_size):
     #plaintext = decryptor.decrypt(ciphered_data.decode())
     print("Text After Decryption: ", plaintext)
 
+def rsasign(input_file, output_file, key_size):
+    print("Generating Key Pair...")
+    key_pair = RSA.generate(key_size) # Generating Key Pairs
+    s_key = key_pair.export_key()  # Private key
+    g_key = key_pair.publickey().export_key()  # Public key
+    #Writing keys into a file
+    with open("c.pem", "wb") as x:
+         x.write(s_key)
+    with open("d.pem", "wb") as x:
+         x.write(g_key)
 
+    # Input the original file
+    print("Loading Original File")
+    file_in = open(input_file, "rb")  # opening for reading as binary
+    data = file_in.read()
+    text = data.decode("latin-1")
+    file_in.close()
+
+    # Private key signature generation
+    signer = sign_PKCS1_v1_5.new(RSA.importKey(s_key))
+    rand_hash = SHA256.new()
+    rand_hash.update(text.encode())
+    signature = signer.sign(rand_hash)
+    file_out = open(output_file, "wb")  # Open file to write bytes
+    file_out.write(signature)  # Writing encrypted data to the file
+    file_out.close()
+    print("Signature Generated and saved to", output_file)
+
+    # Public key verification
+    print("Verification process started..")
+    print("Loading signature from", output_file)
+    # Input signature from the file
+    file_in = open(output_file, "rb")  # opening for reading as binary
+    sign = file_in.read()
+    file_in.close()
+    verifier = sign_PKCS1_v1_5.new(RSA.importKey(g_key))
+    _rand_hash = SHA256.new()
+    _rand_hash.update(text.encode())
+    verify = verifier.verify(_rand_hash, sign)
+    if(verify == True):
+        print("Signature Verified!")
+    else:
+        print("Signature doesn't match!")
 
 
 def aescrypto(input_file, mode, output_file, key_size):
-    # Encryption process starts here
+    print("Generating Key...")
     if(key_size== "256"):
         key = get_random_bytes(32) #Generating the key
     else:
@@ -64,8 +110,10 @@ def aescrypto(input_file, mode, output_file, key_size):
     file_out_key = open(key_location, "wb")
     file_out_key.write(key)
     file_out_key.close()
+    print("Key has been saved to ", key_location)
 
     # Input the original file
+    print("Loading original file")
     file_in = open(input_file, "rb")  # opening for reading as binary
     data = file_in.read()
     text = data.decode("utf-8") # Decoding the byte object to print the text
@@ -83,6 +131,7 @@ def aescrypto(input_file, mode, output_file, key_size):
         file_out.write(cipher.iv)  # Write the iv to the output file (will be required for decryption)
         file_out.write(ciphered_data)  # Write the varying length ciphertext to the file (this is the encrypted data)
         file_out.close()
+        print("File ecrypted and saved as ", output_file)
 
         # Input the key from the file
         file_in_key = open(key_location, "rb")  # Read bytes
@@ -93,6 +142,7 @@ def aescrypto(input_file, mode, output_file, key_size):
         # Decrypting procress starts here
         # Read the data from the cipher file
         print("Decryption Started...")
+        print("Loading ciphertext file")
         file_in = open(output_file, 'rb')  # Open the file to read bytes
         iv = file_in.read(16)  # Read the iv out - this is 16 bytes long
         ciphered_data = file_in.read()  # Read the rest of the data
@@ -110,6 +160,7 @@ def aescrypto(input_file, mode, output_file, key_size):
         file_out = open(output_file, "wb")  # Open file to write bytes
         file_out.write(ciphered_data)  # Write the varying length ciphertext to the file (this is the encrypted data)
         file_out.close()
+        print("File ecrypted and saved as ", output_file)
 
         # Input the key from the file
         file_in_key = open(key_location, "rb")  # Read bytes
@@ -119,6 +170,7 @@ def aescrypto(input_file, mode, output_file, key_size):
 
         # Decrypting procress starts here
         print("Decrypting Started...")
+        print("Loading ciphertext file")
         file_in = open(output_file, 'rb')  # Open the file to read bytes
         ciphered_data = file_in.read()  # Read the rest of the data
         file_in.close()
@@ -147,6 +199,11 @@ def main():
         output_file = input("Type the name of the output file (Eg. cipher.bin): ")
         key_size =  int(input("Type RSA Key Size in interger (eg. 2048): "))
         rsacrypto(input_file, output_file, key_size)
+    elif(choice == "3"):
+        input_file = input("Type the path of the input file: ")
+        output_file = input("Type the name of the output file where signature will be stored: ")
+        key_size =  int(input("Type RSA Key Size in interger (eg. 2048): "))
+        rsasign(input_file, output_file, key_size)
 
 
 if __name__ == "__main__":
