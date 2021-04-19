@@ -15,8 +15,6 @@ def aescrypto(input_file, mode, output_file, key_size):
         key = get_random_bytes(16)
     key_location = "my_key.bin" #location to store the key
 
-    print("the key is: ", key)
-
     #save key to the file
     file_out_key = open(key_location, "wb")
     file_out_key.write(key)
@@ -25,11 +23,14 @@ def aescrypto(input_file, mode, output_file, key_size):
     #input the original file
     file_in = open(input_file, "rb")  # opening for reading as binary
     data = file_in.read()
+    text = data.decode("utf-8")
+    print("Original Text from the File: ", text)
     file_in.close()
 
 
     # Create cipher object and encrypt the data
     if(mode == "CFB"):
+        print("Encrypting Started...")
         cipher = AES.new(key, AES.MODE_CFB)  # Create a AES cipher object with the key using the mode CBC
         ciphered_data = cipher.encrypt(pad(data, AES.block_size))  # Pad the input data and then encrypt
 
@@ -46,6 +47,7 @@ def aescrypto(input_file, mode, output_file, key_size):
 
         # Decrypting procress starts here
         # Read the data from the cipher file
+        print("Decrypting Started...")
         file_in = open(output_file, 'rb')  # Open the file to read bytes
         iv = file_in.read(16)  # Read the iv out - this is 16 bytes long
         ciphered_data = file_in.read()  # Read the rest of the data
@@ -54,8 +56,9 @@ def aescrypto(input_file, mode, output_file, key_size):
         cipher = AES.new(key_from_file, AES.MODE_CFB, iv=iv)  # Setup cipher
         original_data = unpad(cipher.decrypt(ciphered_data), AES.block_size)
         original_data = original_data.decode("utf-8")
-        print(original_data)
+        print("Decrypted Text: ", original_data)
     else:
+        print("Encrypting Started...")
         cipher = AES.new(key, AES.MODE_ECB)  # Create a AES cipher object with the key using the mode CBC
         ciphered_data = cipher.encrypt(pad(data, AES.block_size))  # Pad the input data and then encrypt
 
@@ -70,6 +73,7 @@ def aescrypto(input_file, mode, output_file, key_size):
         assert key == key_from_file, "keys doesn't match"  # Matching the keys
 
         # Decrypting procress starts here
+        print("Decrypting Started...")
         file_in = open(output_file, 'rb')  # Open the file to read bytes
         ciphered_data = file_in.read()  # Read the rest of the data
         file_in.close()
@@ -77,7 +81,7 @@ def aescrypto(input_file, mode, output_file, key_size):
         cipher = AES.new(key_from_file, AES.MODE_ECB)  # Setup cipher
         original_data = unpad(cipher.decrypt(ciphered_data), AES.block_size)
         original_data = original_data.decode("utf-8")
-        print(original_data)
+        print("Decrypted text: ", original_data)
 
 def main():
 
