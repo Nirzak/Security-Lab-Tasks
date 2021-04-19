@@ -11,8 +11,10 @@ import Crypto.Signature.PKCS1_v1_5 as sign_PKCS1_v1_5 # For signature/Verify Sig
 from Crypto.Cipher import PKCS1_v1_5 # For encryption/decryption using RSA
 from Crypto import Random
 from Crypto.Hash import SHA256
+import time # Timer function
 
 def rsacrypto(input_file, output_file, key_size):
+    start = time.time()
     print("Generating Key Pair...")
     key_pair = RSA.generate(key_size) # Generating Key Pairs
     s_key = key_pair.export_key()  # Private key
@@ -28,7 +30,7 @@ def rsacrypto(input_file, output_file, key_size):
     file_in = open(input_file, "rb")  # opening for reading as binary
     data = file_in.read()
     text = data.decode("latin-1")
-    print("Original Text from the File: ", text)
+    print("Original Text from the File:", text)
     file_in.close()
 
     # Encryption Process
@@ -51,9 +53,12 @@ def rsacrypto(input_file, output_file, key_size):
     byte_object = decryptor.decrypt(ciphered_data, Random.new().read)
     plaintext = byte_object.decode()
     #plaintext = decryptor.decrypt(ciphered_data.decode())
-    print("Text After Decryption: ", plaintext)
+    print("Text After Decryption:", plaintext)
+    end = time.time()
+    print("Time Taken:", (end-start))
 
 def rsasign(input_file, output_file, key_size):
+    start = time.time()
     print("Generating Key Pair...")
     key_pair = RSA.generate(key_size) # Generating Key Pairs
     s_key = key_pair.export_key()  # Private key
@@ -96,8 +101,11 @@ def rsasign(input_file, output_file, key_size):
         print("Signature Verified!")
     else:
         print("Signature doesn't match!")
+    end = time.time()
+    print("Time Taken: ", (end-start))
 
 def sha256gen(input_file):
+    start = time.time()
     # Input the original file
     print("Loading File")
     file_in = open(input_file, "rb")  # opening for reading as binary
@@ -106,8 +114,11 @@ def sha256gen(input_file):
     hash_obj = SHA256.new()
     hash_obj.update(data)
     print("Generated SHA256 hash: ", hash_obj.hexdigest())
+    end = time.time()
+    print("Time Taken:", (end-start))
 
 def aescrypto(input_file, mode, output_file, key_size):
+    start = time.time()
     print("Generating Key...")
     if(key_size== "256"):
         key = get_random_bytes(32) #Generating the key
@@ -126,7 +137,7 @@ def aescrypto(input_file, mode, output_file, key_size):
     file_in = open(input_file, "rb")  # opening for reading as binary
     data = file_in.read()
     text = data.decode("utf-8") # Decoding the byte object to print the text
-    print("Original Text from the File: ", text)
+    print("Original Text from the File:", text)
     file_in.close()
 
 
@@ -140,7 +151,7 @@ def aescrypto(input_file, mode, output_file, key_size):
         file_out.write(cipher.iv)  # Write the iv to the output file (will be required for decryption)
         file_out.write(ciphered_data)  # Write the varying length ciphertext to the file (this is the encrypted data)
         file_out.close()
-        print("File ecrypted and saved as ", output_file)
+        print("File ecrypted and saved as", output_file)
 
         # Input the key from the file
         file_in_key = open(key_location, "rb")  # Read bytes
@@ -161,6 +172,8 @@ def aescrypto(input_file, mode, output_file, key_size):
         original_data = unpad(cipher.decrypt(ciphered_data), AES.block_size)
         original_data = original_data.decode("utf-8")
         print("Decrypted Text: ", original_data)
+        end = time.time()
+        print("Time Taken:", (end - start))
     else:
         print("Encrypting Started...")
         cipher = AES.new(key, AES.MODE_ECB)  # Create a AES cipher object with the key using the mode CBC
@@ -169,7 +182,7 @@ def aescrypto(input_file, mode, output_file, key_size):
         file_out = open(output_file, "wb")  # Open file to write bytes
         file_out.write(ciphered_data)  # Write the varying length ciphertext to the file (this is the encrypted data)
         file_out.close()
-        print("File ecrypted and saved as ", output_file)
+        print("File ecrypted and saved as", output_file)
 
         # Input the key from the file
         file_in_key = open(key_location, "rb")  # Read bytes
@@ -188,6 +201,8 @@ def aescrypto(input_file, mode, output_file, key_size):
         original_data = unpad(cipher.decrypt(ciphered_data), AES.block_size)
         original_data = original_data.decode("utf-8")
         print("Decrypted text: ", original_data)
+        end = time.time()
+        print("Time Taken:", (end - start))
 
 def main():
 
