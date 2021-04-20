@@ -120,10 +120,8 @@ def sha256gen(input_file):
 def aescrypto(input_file, mode, output_file, key_size):
     start = time.time()
     print("Generating Key...")
-    if(key_size== "256"):
-        key = get_random_bytes(32) #Generating the key
-    else:
-        key = get_random_bytes(16)
+    key_size = int(key_size/8)
+    key = get_random_bytes(key_size) #Generating the key
     key_location = "my_key.bin" #location to store the key
 
     # Save key to the file
@@ -211,7 +209,7 @@ def main():
     if(choice == "1"):
         input_file = input("Type the path of the input file: ")
         output_file = input("Type the name of the output file (Eg. cipher.bin): ")
-        key_size = input("Type 128 for 128bit key 256 for 256 bit key: ")
+        key_size = int(input("Type 128 for 128bit key 256 for 256 bit key: "))
         mode = input("Type the encryption-decrytion mode (Eg. ECB or CFB): ")
 #        if(input_mode == "ECB"):
 #            mode = "AES.MODE_ECB"
